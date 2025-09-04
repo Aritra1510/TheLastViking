@@ -1,137 +1,76 @@
 package main;
-import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import inputs.KeyBoardInputs;
 import inputs.MouseInputs;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 //import java.awt.event.KeyListener;
-import java.io.InputStream;
-import static utilz.Constants.PlayerConstants.*;
-import static utilz.Constants.Direction.*;
+import java.util.Random;
 
 public class GamePanel extends JPanel{
 
     private MouseInputs mouseInputs;
     private float xDelta = 100, yDelta = 100;
-    private BufferedImage img;
-    private BufferedImage[][] animations;
-    private int aniTick, aniIndex, aniSpeed = 15;
-    private int playerAction = IDLE;
-    private int playerDir = -1;
-    private boolean moving = false;
-    
+    private float xDir = 1f, yDir = 1f;
+    private Color color = new Color(100,124,255);
+    private Random random;
+
     public GamePanel(){
+    	random = new Random();
         mouseInputs = new MouseInputs(this);
-        
-        importImg();
-        loadAnimations();
-        
-        setPanelSize();
         addKeyListener(new KeyBoardInputs(this));
         addMouseListener(mouseInputs);
         addMouseMotionListener(mouseInputs);
     }
 
-    private void loadAnimations() {
-		animations = new BufferedImage[9][6];
-		
-		for(int y = 0; y<animations.length; y++) {
-			for(int x = 0; x < animations[y].length; x++) {
-				animations[y][x] = img.getSubimage(x*64, y*40, 64, 40);
-			}
-		}
-	}
+    public void changeXDelta(int value){
+        this.xDelta += value;
+        //repaint();
+    }
 
-	private void importImg() {
-		InputStream is = getClass().getResourceAsStream("/player_sprites.png");
-		
-		try {
-			img = ImageIO.read(is);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-	}
+        public void changeYDelta(int value){
+        this.yDelta += value;
+        //repaint();
+    }
+        
+    public void setRectPos(int x, int y) {
+    	this.xDelta = x;
+    	this.yDelta = y;
+    	//repaint();
+    }
 
-	private void setPanelSize() {
-    	Dimension size = new Dimension(880, 500); // change it to 1280, 800 later
-		setPreferredSize(size);
-		
-	}
-
-    @Override  
+    @Override
+    
     public void paintComponent(Graphics g){
     	
         super.paintComponent(g);
         
-        updateAnimationTick();
-        
-        setAnimation();
-        updatePosition();
-       
-        g.drawImage(animations[playerAction][aniIndex], (int)xDelta, (int)yDelta, 128, 80, null); // each character is 64 x 40 px
+        updateRectangle();
+        g.setColor(color);
+        g.fillRect((int) xDelta, (int) yDelta, 200, 50);
 
     }
-    
-    private void updatePosition() {
-		if(moving) {
-			switch(playerDir) {
-			case LEFT:
-				xDelta -= 5;
-				break;
-			case UP:
-				yDelta -= 5;
-				break;
-			case RIGHT:
-				xDelta += 5;
-				break;
-			case DOWN:
-				yDelta += 5;
-				break;
-			}
+
+	private void updateRectangle() {
+		xDelta += xDir;
+		if(xDelta > 400 || xDelta < 0) {
+			xDir *= -1;
+			color = getRandomColor();
+		}
+		yDelta += yDir;
+		if(yDelta > 400 || yDelta < 0) {
+			yDir *= -1;
+			color = getRandomColor();
 		}
 		
 	}
 
-	private void setAnimation() {
-		if(moving) {
-			playerAction = RUNNING;
-		}
-		else {
-			playerAction = IDLE;
-		}
+	private Color getRandomColor() {
+		int r = random.nextInt(255);
+		int g = random.nextInt(255);
+		int b = random.nextInt(255);
 		
+		return new Color(r, g, b);
 	}
-
-	public void setDirection(int direction) {
-    	this.playerDir = direction;
-    	moving = true;
-    }
-    
-    public void setMoving(boolean moving) {
-    	this.moving = moving;
-    }
-
-	private void updateAnimationTick() {
-		aniTick++;
-		if(aniTick >= aniSpeed) {
-			aniTick = 0;
-			aniIndex++;
-			if(aniIndex >= GetSpriteAmount(playerAction)) {
-				aniIndex = 0;
-			}
-		}
-		
-	}
-    
 }
