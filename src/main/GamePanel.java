@@ -1,11 +1,14 @@
 package main;
 import javax.imageio.ImageIO;
-import javax.swing.*;
+//import javax.swing.*;
+import javax.swing.JPanel;
 
 import inputs.KeyBoardInputs;
 import inputs.MouseInputs;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+//import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 //import java.awt.event.KeyListener;
@@ -68,16 +71,18 @@ public class GamePanel extends JPanel{
 		setPreferredSize(size);
 		
 	}
+	
+	public void updateGame() {
+        updateAnimationTick();
+        
+        setAnimation();
+        updatePosition();
+	}
 
     @Override  
     public void paintComponent(Graphics g){
     	
         super.paintComponent(g);
-        
-        updateAnimationTick();
-        
-        setAnimation();
-        updatePosition();
        
         g.drawImage(animations[playerAction][aniIndex], (int)xDelta, (int)yDelta, 128, 80, null); // each character is 64 x 40 px
 
