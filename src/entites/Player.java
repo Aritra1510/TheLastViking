@@ -15,8 +15,9 @@ public class Player extends Entity{
 	 private BufferedImage[][] animations;
 	 private int aniTick, aniIndex, aniSpeed = 15;
 	 private int playerAction = IDLE;
-	 private int playerDir = -1;
-	 private boolean moving = false;
+	 private boolean moving = false, attacking = false;
+	 private boolean left, up, right, down;
+	 private float playerSpeed = 2.0f;
 
 	public Player(float x, float y) {
 		super(x, y);
@@ -25,10 +26,11 @@ public class Player extends Entity{
 	}
 	
 	public void update() {
+		
         updateAnimationTick();
-        
-        setAnimation();
         updatePosition();
+        setAnimation();
+        
 	}
 	
 	public void render(Graphics g) {
@@ -36,43 +38,54 @@ public class Player extends Entity{
 	}
 	
     private void updatePosition() {
-		if(moving) {
-			switch(playerDir) {
-			case LEFT:
-				x -= 1;
-				break;
-			case UP:
-				y -= 1;
-				break;
-			case RIGHT:
-				x += 1;
-				break;
-			case DOWN:
-				y += 1;
-				break;
-			}
-		}
+    	
+    	moving = false;
+    	
+    	if(left && !right) {
+    		x -= playerSpeed;
+    		moving = true;
+    	}
+    	else if( right && !left) {
+    		x += playerSpeed;
+    		moving = true;
+    	}
+    	
+    	if(up && !down) {
+    		y -= playerSpeed;
+    		moving = true;
+    	}
+    	else if(down && !up) {
+    		y += playerSpeed;
+    		moving = true;
+    	}
 		
 	}
 
 	private void setAnimation() {
+		
+		int startAni = playerAction;
+		
 		if(moving) {
 			playerAction = RUNNING;
 		}
 		else {
 			playerAction = IDLE;
 		}
+		if(attacking) {
+			playerAction = ATTACK_1;
+		}	
+		if(startAni != playerAction) {
+			resetAniTick();
+		}
 		
 	}
 
-	public void setDirection(int direction) {
-    	this.playerDir = direction;
-    	moving = true;
-    }
-    
-    public void setMoving(boolean moving) {
-    	this.moving = moving;
-    }
+
+	private void resetAniTick() {
+		aniTick = 0;
+		aniIndex = 0;
+		
+	}
 
 	private void updateAnimationTick() {
 		aniTick++;
@@ -81,6 +94,7 @@ public class Player extends Entity{
 			aniIndex++;
 			if(aniIndex >= GetSpriteAmount(playerAction)) {
 				aniIndex = 0;
+				attacking = false;
 			}
 		}
 		
@@ -88,7 +102,7 @@ public class Player extends Entity{
 	
     private void loadAnimations() {
     	
-InputStream is = getClass().getResourceAsStream("/player_sprites.png");
+    	InputStream is = getClass().getResourceAsStream("/player_sprites.png");
 		
 		try {
 			BufferedImage img = ImageIO.read(is);
@@ -111,5 +125,50 @@ InputStream is = getClass().getResourceAsStream("/player_sprites.png");
 		}
     
 	}
+    
+    public void resetDirBooleans() {
+    	left = false;
+    	up = false;
+    	right = false;
+    	down = false;
+    }
+    
+    public void setAttacking(boolean attacking) {
+    	this.attacking = attacking;
+    }
+
+	public boolean isLeft() {
+		return left;
+	}
+
+	public void setLeft(boolean left) {
+		this.left = left;
+	}
+
+	public boolean isUp() {
+		return up;
+	}
+
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+
+	public boolean isRight() {
+		return right;
+	}
+
+	public void setRight(boolean right) {
+		this.right = right;
+	}
+
+	public boolean isDown() {
+		return down;
+	}
+
+	public void setDown(boolean down) {
+		this.down = down;
+	}
+    
+    
 
 }
