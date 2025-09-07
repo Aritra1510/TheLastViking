@@ -10,6 +10,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import utilz.LoadSave;
+
 public class Player extends Entity{
 	
 	 private BufferedImage[][] animations;
@@ -102,28 +104,14 @@ public class Player extends Entity{
 	
     private void loadAnimations() {
     	
-    	InputStream is = getClass().getResourceAsStream("/player_sprites.png");
-		
-		try {
-			BufferedImage img = ImageIO.read(is);
-			animations = new BufferedImage[9][6];
+    	BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
+    	animations = new BufferedImage[9][6];
 			
 			for(int y = 0; y<animations.length; y++) {
 				for(int x = 0; x < animations[y].length; x++) {
 					animations[y][x] = img.getSubimage(x*64, y*40, 64, 40);
 				}
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-    
+			}    
 	}
     
     public void resetDirBooleans() {
