@@ -36,7 +36,7 @@ public class KeyBoardInputs implements KeyListener {
           	gamePanel.getGame().getPlayer().setRight(true);
               break;
           case KeyEvent.VK_SPACE:
-        	  gamePanel.getGame().getPlayer().setAttacking(true);
+        	gamePanel.getGame().getPlayer().setAttacking(true);
         	  break;
       }
         
