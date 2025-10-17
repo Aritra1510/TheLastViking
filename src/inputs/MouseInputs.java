@@ -7,22 +7,30 @@ import java.awt.event.MouseMotionListener;
 import gamestates.Gamestate;
 import main.GamePanel;
 
-public class MouseInputs implements MouseListener, MouseMotionListener{
+public class MouseInputs implements MouseListener, MouseMotionListener {
 
 	private GamePanel gamePanel;
-	
-	public MouseInputs(GamePanel gamePanel){
+
+	public MouseInputs(GamePanel gamePanel) {
 		this.gamePanel = gamePanel;
 	}
-	
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-    	switch (Gamestate.state) {
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		switch (Gamestate.state) {
+		case PLAYING:
+			gamePanel.getGame().getPlaying().mouseDragged(e);
+			break;
+		default:
+			break;
+
+		}
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		switch (Gamestate.state) {
 		case MENU:
 			gamePanel.getGame().getMenu().mouseMoved(e);
 			break;
@@ -34,10 +42,9 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 
 		}
 
-        
-    }
+	}
 
-    @Override
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		switch (Gamestate.state) {
 		case PLAYING:
@@ -50,10 +57,9 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 
 	}
 
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    	switch (Gamestate.state) {
+	@Override
+	public void mousePressed(MouseEvent e) {
+		switch (Gamestate.state) {
 		case MENU:
 			gamePanel.getGame().getMenu().mousePressed(e);
 			break;
@@ -64,11 +70,12 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 			break;
 
 		}
-    }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    	switch (Gamestate.state) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		switch (Gamestate.state) {
 		case MENU:
 			gamePanel.getGame().getMenu().mouseReleased(e);
 			break;
@@ -79,18 +86,18 @@ public class MouseInputs implements MouseListener, MouseMotionListener{
 			break;
 
 		}
-        
-    }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
+	}
 
-    }
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
 
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-    }
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+
+	}
 
 }
